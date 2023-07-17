@@ -1,30 +1,41 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:poker_app/main.dart';
+import 'package:poker_app/models/player.dart';
+import 'package:poker_app/models/card.dart';
+import 'package:poker_app/models/deck.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Player', () {
+    test('should hold 5 cards after dealt', () {
+      Player player = Player();
+      player.cards = List.generate(
+          5, (index) => PokerCard((index + 1).toString(), 'hearts', false));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(player.cards?.length, 5);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('should remove specified cards', () {
+      Deck deck = Deck(cards: []);
+      deck.createCards();
+      PokerCard cardToRemove = PokerCard('2', 'hearts', false);
+      deck.removeCards([cardToRemove]);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(deck.cards.contains(cardToRemove), false);
+    });
+  });
+
+  group('PokerCard', () {
+    test('should have correct suit and rank', () {
+      PokerCard card = PokerCard('2', 'hearts', false);
+
+      expect(card.rank, '2');
+      expect(card.suit, 'hearts');
+    });
+
+    test('should be selected correctly', () {
+      PokerCard card = PokerCard('2', 'hearts', true);
+
+      expect(card.isSelected, true);
+    });
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:poker_app/constants/strings.dart';
 import 'package:poker_app/constants/colors.dart';
 
@@ -6,7 +7,8 @@ class ResultScreen extends StatelessWidget {
   final String firstResult;
   final String secondResult;
 
-  const ResultScreen({required this.firstResult, required this.secondResult});
+  const ResultScreen(
+      {super.key, required this.firstResult, required this.secondResult});
 
   @override
   Widget build(BuildContext context) {

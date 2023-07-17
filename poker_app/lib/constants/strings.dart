@@ -10,4 +10,6 @@ class Strings {
   static const String playerText = 'Player';
   static const String alertTitle = 'Pass your phone to the second player';
   static const String alertSubtitle = 'Next turn';
+  static const String alertNoCardsSubtitle = 'Not enough cards';
+  static const String alertNoCardsTitle = 'There are not enough cards left in the deck to replace the selected cards.';
 }
