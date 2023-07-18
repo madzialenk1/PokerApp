@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:poker_app/features/replacement_logic.dart';
 import 'package:poker_app/features/win_rules.dart';
-import 'package:poker_app/view_models/game_logic.dart';
 import 'package:poker_app/models/card.dart';
 import 'package:poker_app/views/buttons_view.dart';
 import 'package:poker_app/constants/strings.dart';
@@ -19,8 +17,8 @@ class PokerGameScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final List<PokerCard> selectedCards = ref.watch(selectedCardsProvider);
     bool isGridViewVisible = ref.watch(isGridViewVisibleProvider);
-    final gameLogic = GameLogic(ref);
-    final replacementLogic = ReplacementLogicHelper(ref, context);
+    final replacementLogic = ref.watch(replacementServiceProvider);
+    final gameLogic = ref.watch(gameLogicServiceProvider);
 
     void handleSelectedCards(List<PokerCard> cards) {
       ref.read(selectedCardsProvider.notifier).state = cards;

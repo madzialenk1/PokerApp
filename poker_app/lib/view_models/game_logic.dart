@@ -7,7 +7,7 @@ import 'package:poker_app/models/card.dart';
 import 'package:poker_app/models/player.dart';
 
 class GameLogic {
-  final WidgetRef _ref;
+  final Ref _ref;
 
   GameLogic(this._ref);
 
@@ -26,7 +26,6 @@ class GameLogic {
       'secondPlayerId': "jshbdjhbsdjbsad", // to be changed later
     });
 
-    final container = ProviderContainer();
     _ref.read(gameIdProvider.notifier).state = docRef.id;
 
     final firstPlayer = _ref.read(firstPlayerProvider.notifier);
@@ -41,8 +40,6 @@ class GameLogic {
       cards: secondPlayerCards.map((card) => PokerCard.fromMap(card)).toList(),
     );
     isFirstPlayerTurn.state = true;
-
-    container.dispose();
   }
 
   void startGame() async {

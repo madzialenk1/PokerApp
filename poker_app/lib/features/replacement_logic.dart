@@ -1,29 +1,29 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
 
 import 'package:poker_app/constants/strings.dart';
 import 'package:poker_app/models/card.dart';
 import 'package:poker_app/models/deck.dart';
 import 'package:poker_app/models/player.dart';
 import 'package:poker_app/providers.dart';
-import 'package:poker_app/view_models/popup_helper.dart';
+import 'package:poker_app/utils/result.dart';
 
 class ReplacementLogicHelper {
-  final WidgetRef _ref;
-  final BuildContext _context;
+  final Ref _ref;
 
-  ReplacementLogicHelper(this._ref, this._context);
+  ReplacementLogicHelper(this._ref);
 
-  void replaceCards(List<PokerCard> selectedCards) {
-    final Deck deck = _ref.watch(deckProvider);
-    final Player firstPlayer = _ref.watch(firstPlayerProvider);
-    final Player secondPlayer = _ref.watch(secondPlayerProvider);
-    final bool isFirstPlayerTurn = _ref.watch(isFirstPlayerTurnProvider);
+  Result replaceCards(List<PokerCard> selectedCards) {
+    final Deck deck = _ref.read(deckProvider);
+    final Player firstPlayer = _ref.read(firstPlayerProvider);
+    final Player secondPlayer = _ref.read(secondPlayerProvider);
+    final bool isFirstPlayerTurn = _ref.read(isFirstPlayerTurnProvider);
 
     if (deck.cards.length < selectedCards.length) {
-      PopupHelper.showPopup(
-          _context, Strings.alertNoCardsSubtitle, Strings.alertNoCardsTitle);
-      return;
+      return Failure(Exception('Not enough cards in the deck'));
     }
 
     List<PokerCard> newDeckCards = _shuffleDeck(deck.cards);
@@ -51,6 +51,7 @@ class ReplacementLogicHelper {
       _updateGameDocument(gameId, newDeckCards, firstPlayer, secondPlayer,
           isFirstPlayerTurn, newPlayerHand);
     }
+    return const Success(null);
   }
 
   List<PokerCard> _shuffleDeck(List<PokerCard> cards) {

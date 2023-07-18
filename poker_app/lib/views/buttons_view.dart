@@ -7,6 +7,7 @@ import 'package:poker_app/features/win_rules.dart';
 import 'package:poker_app/models/card.dart';
 import 'package:poker_app/models/game.dart';
 import 'package:poker_app/providers.dart';
+import 'package:poker_app/utils/result.dart';
 import 'package:poker_app/view_models/popup_helper.dart';
 import 'package:poker_app/views/result_screen.dart';
 
@@ -23,7 +24,7 @@ class ButtonsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final rulesHelper = WinRules();
+    final winHelperService = ref.watch(winHelperServiceProvider);
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -34,9 +35,9 @@ class ButtonsView extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               HandRank result1 =
-                  rulesHelper.evaluateHand(game?.firstPlayerCards ?? []);
+                  winHelperService.evaluateHand(game?.firstPlayerCards ?? []);
               HandRank result2 =
-                  rulesHelper.evaluateHand(game?.secondPlayerCards ?? []);
+                  winHelperService.evaluateHand(game?.secondPlayerCards ?? []);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -50,7 +51,15 @@ class ButtonsView extends ConsumerWidget {
             child: const Text(Strings.endButtonText),
           ),
           ElevatedButton(
-            onPressed: () => replacementLogic.replaceCards(selectedCards),
+            onPressed: () {
+              switch (replacementLogic.replaceCards(selectedCards)) {
+                case Failure():
+                  PopupHelper.showPopup(context, Strings.alertNoCardsSubtitle,
+                      Strings.alertNoCardsTitle);
+                case Success():
+                  break;
+              }
+            },
             child: const Text(Strings.replaceButtonText),
           ),
           ElevatedButton(
