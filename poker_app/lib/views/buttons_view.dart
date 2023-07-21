@@ -52,12 +52,14 @@ class ButtonsView extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              switch (replacementLogic.replaceCards(selectedCards)) {
-                case Failure():
-                  PopupHelper.showPopup(context, Strings.alertNoCardsSubtitle,
-                      Strings.alertNoCardsTitle);
-                case Success():
-                  break;
+              if (game != null) {
+                switch (replacementLogic.replaceCards(game!, selectedCards, ref.watch(gameIdProvider) ?? "")) {
+                  case Failure():
+                    PopupHelper.showPopup(context, Strings.alertNoCardsSubtitle,
+                        Strings.alertNoCardsTitle);
+                  case Success():
+                    break;
+                }
               }
             },
             child: const Text(Strings.replaceButtonText),
@@ -70,8 +72,6 @@ class ButtonsView extends ConsumerWidget {
               ref.read(isGridViewVisibleProvider.notifier).state = false;
               Future.delayed(const Duration(seconds: 3), () {
                 ref.read(isGridViewVisibleProvider.notifier).state = true;
-                ref.read(isFirstPlayerTurnProvider.notifier).state =
-                    !(game?.isFirstPlayerTurn ?? false);
                 games.doc(ref.watch(gameIdProvider)).update({
                   'isFirstPlayerTurn': !(game?.isFirstPlayerTurn ?? false),
                 });

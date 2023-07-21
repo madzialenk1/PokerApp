@@ -80,7 +80,13 @@ class PokerGameScreen extends ConsumerWidget {
                         ],
                       )
                     : ElevatedButton(
-                        onPressed: gameLogic.startGame,
+                        onPressed: () {
+                          gameLogic.startGame().then((value) {
+                            ref
+                                .read(gameIdProvider.notifier)
+                                .update((state) => value);
+                          });
+                        },
                         child: const Text(Strings.startGameButtonText),
                       ),
               ),
